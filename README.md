@@ -1,6 +1,6 @@
 # wasm的线性内存管理
 简单用法
-```
+```MoonBit
   let mem1 = @wasmMemManager.getMemory(48)
   let mem2 = @wasmMemManager.getMemory(12)
   let mem3 = @wasmMemManager.getMemory(30)
