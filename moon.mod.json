@@ -1,6 +1,6 @@
 {
   "name": "suiyunonghen/wasmMemManager",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "deps": {},
   "readme": "README.md",
   "repository": "https://github.com/suiyunonghen/wasmMemManager",

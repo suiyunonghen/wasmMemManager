@@ -1,11 +1,13 @@
 //wasm每次grow都是按照页数增加内存，一页是64KB
 //const PAGE_MEMORY = 65536
-pub(readonly) struct Memory {
+///|
+pub struct Memory {
   offset : Int
   length : Int
 } derive(Show)
 
-pub fn readInt32(self : Memory, pos : Int) -> Int? {
+///|
+pub fn Memory::readInt32(self : Memory, pos : Int) -> Int? {
   if pos + 4 < self.length {
     Some(load32(pos + self.offset))
   } else {
@@ -13,11 +15,13 @@ pub fn readInt32(self : Memory, pos : Int) -> Int? {
   }
 }
 
-pub fn readInt32_unsafe(self : Memory, pos : Int) -> Int {
+///|
+pub fn Memory::readInt32_unsafe(self : Memory, pos : Int) -> Int {
   load32(pos + self.offset)
 }
 
-pub fn readUInt32(self : Memory, pos : Int) -> UInt? {
+///|
+pub fn Memory::readUInt32(self : Memory, pos : Int) -> UInt? {
   if pos + 4 < self.length {
     Some(load32_u(pos + self.offset))
   } else {
@@ -25,11 +29,13 @@ pub fn readUInt32(self : Memory, pos : Int) -> UInt? {
   }
 }
 
-pub fn readUInt32_unsafe(self : Memory, pos : Int) -> UInt {
+///|
+pub fn Memory::readUInt32_unsafe(self : Memory, pos : Int) -> UInt {
   load32_u(pos + self.offset)
 }
 
-pub fn readByte(self : Memory, pos : Int) -> Byte? {
+///|
+pub fn Memory::readByte(self : Memory, pos : Int) -> Byte? {
   if pos + 1 < self.length {
     Some(load8_u(pos + self.offset).to_byte())
   } else {
@@ -37,11 +43,13 @@ pub fn readByte(self : Memory, pos : Int) -> Byte? {
   }
 }
 
-pub fn readByte_unsafe(self : Memory, pos : Int) -> Byte {
+///|
+pub fn Memory::readByte_unsafe(self : Memory, pos : Int) -> Byte {
   load8_u(pos + self.offset).to_byte()
 }
 
-pub fn read8s(self : Memory, pos : Int) -> Int? {
+///|
+pub fn Memory::read8s(self : Memory, pos : Int) -> Int? {
   if pos + 1 < self.length {
     Some(load8_s(pos + self.offset))
   } else {
@@ -49,11 +57,13 @@ pub fn read8s(self : Memory, pos : Int) -> Int? {
   }
 }
 
-pub fn read8s_unsafe(self : Memory, pos : Int) -> Int {
+///|
+pub fn Memory::read8s_unsafe(self : Memory, pos : Int) -> Int {
   load8_s(pos + self.offset)
 }
 
-pub fn readU16(self : Memory, pos : Int) -> Int? {
+///|
+pub fn Memory::readU16(self : Memory, pos : Int) -> Int? {
   if pos + 2 < self.length {
     Some(load16_u(pos + self.offset))
   } else {
@@ -61,11 +71,13 @@ pub fn readU16(self : Memory, pos : Int) -> Int? {
   }
 }
 
-pub fn readU16_unsafe(self : Memory, pos : Int) -> Int {
+///|
+pub fn Memory::readU16_unsafe(self : Memory, pos : Int) -> Int {
   load16_u(pos + self.offset)
 }
 
-pub fn read16(self : Memory, pos : Int) -> Int? {
+///|
+pub fn Memory::read16(self : Memory, pos : Int) -> Int? {
   if pos + 2 < self.length {
     Some(load16_s(pos + self.offset))
   } else {
@@ -73,11 +85,18 @@ pub fn read16(self : Memory, pos : Int) -> Int? {
   }
 }
 
-pub fn read16_unsafe(self : Memory, pos : Int) -> Int {
+///|
+pub fn Memory::read16_unsafe(self : Memory, pos : Int) -> Int {
   load16_s(pos + self.offset)
 }
 
-pub fn fill(self : Memory, pos : Int, len : Int, fillData : Int) -> Unit {
+///|
+pub fn Memory::fill(
+  self : Memory,
+  pos : Int,
+  len : Int,
+  fillData : Int
+) -> Unit {
   let mut writeLen = self.length - pos
   if len < writeLen {
     writeLen = len
@@ -88,11 +107,18 @@ pub fn fill(self : Memory, pos : Int, len : Int, fillData : Int) -> Unit {
   memory_fill_ffi(self.offset + pos, fillData, writeLen)
 }
 
-pub fn fill_unsafe(self : Memory, pos : Int, len : Int, fillData : Int) -> Unit {
+///|
+pub fn Memory::fill_unsafe(
+  self : Memory,
+  pos : Int,
+  len : Int,
+  fillData : Int
+) -> Unit {
   memory_fill_ffi(self.offset + pos, fillData, len)
 }
 
-pub fn moveData(
+///|
+pub fn Memory::moveData(
   self : Memory,
   destPos : Int,
   srcPos : Int,
@@ -112,7 +138,8 @@ pub fn moveData(
   memory_copy_ffi(self.offset + destPos, self.offset + srcPos, rlen)
 }
 
-pub fn move_unsafe(
+///|
+pub fn Memory::move_unsafe(
   self : Memory,
   destPos : Int,
   srcPos : Int,
@@ -121,7 +148,8 @@ pub fn move_unsafe(
   memory_copy_ffi(self.offset + destPos, self.offset + srcPos, copyLen)
 }
 
-pub fn copyFrom(
+///|
+pub fn Memory::copyFrom(
   self : Memory,
   destPos : Int,
   src : Memory,
@@ -142,7 +170,8 @@ pub fn copyFrom(
   memory_copy_ffi(self.offset + destPos, src.offset + srcPos, rlen)
 }
 
-pub fn copyFrom_unsafe(
+///|
+pub fn Memory::copyFrom_unsafe(
   self : Memory,
   destPos : Int,
   src : Memory,
@@ -152,7 +181,8 @@ pub fn copyFrom_unsafe(
   memory_copy_ffi(self.offset + destPos, src.offset + srcPos, len)
 }
 
-pub fn readDouble(self : Memory, pos : Int) -> Double? {
+///|
+pub fn Memory::readDouble(self : Memory, pos : Int) -> Double? {
   if pos + 8 < self.length {
     Some(loadf64(pos + self.offset))
   } else {
@@ -160,11 +190,13 @@ pub fn readDouble(self : Memory, pos : Int) -> Double? {
   }
 }
 
-pub fn readDouble_unsafe(self : Memory, pos : Int) -> Double {
+///|
+pub fn Memory::readDouble_unsafe(self : Memory, pos : Int) -> Double {
   loadf64(pos + self.offset)
 }
 
-pub fn readInt64(self : Memory, pos : Int) -> Int64? {
+///|
+pub fn Memory::readInt64(self : Memory, pos : Int) -> Int64? {
   if pos + 8 < self.length {
     Some(load64(pos + self.offset))
   } else {
@@ -172,11 +204,13 @@ pub fn readInt64(self : Memory, pos : Int) -> Int64? {
   }
 }
 
-pub fn readInt64_unsafe(self : Memory, pos : Int) -> Int64 {
+///|
+pub fn Memory::readInt64_unsafe(self : Memory, pos : Int) -> Int64 {
   load64(pos + self.offset)
 }
 
-pub fn readFloat(self : Memory, pos : Int) -> Float? {
+///|
+pub fn Memory::readFloat(self : Memory, pos : Int) -> Float? {
   if pos + 4 < self.length {
     Some(loadf32(pos + self.offset))
   } else {
@@ -184,11 +218,13 @@ pub fn readFloat(self : Memory, pos : Int) -> Float? {
   }
 }
 
-pub fn readFloat_unsafe(self : Memory, pos : Int) -> Float {
+///|
+pub fn Memory::readFloat_unsafe(self : Memory, pos : Int) -> Float {
   loadf32(pos + self.offset)
 }
 
-pub fn writeInt(self : Memory, pos : Int, value : Int) -> Bool {
+///|
+pub fn Memory::writeInt(self : Memory, pos : Int, value : Int) -> Bool {
   if pos + 4 < self.length {
     store32(pos + self.offset, value)
     true
@@ -197,11 +233,13 @@ pub fn writeInt(self : Memory, pos : Int, value : Int) -> Bool {
   }
 }
 
-pub fn writeInt_unsafe(self : Memory, pos : Int, value : Int) -> Unit {
+///|
+pub fn Memory::writeInt_unsafe(self : Memory, pos : Int, value : Int) -> Unit {
   store32(pos + self.offset, value)
 }
 
-pub fn writeFloat(self : Memory, pos : Int, value : Float) -> Bool {
+///|
+pub fn Memory::writeFloat(self : Memory, pos : Int, value : Float) -> Bool {
   if pos + 4 < self.length {
     storef32(pos + self.offset, value)
     true
@@ -210,11 +248,17 @@ pub fn writeFloat(self : Memory, pos : Int, value : Float) -> Bool {
   }
 }
 
-pub fn writeFloat_unsafe(self : Memory, pos : Int, value : Float) -> Unit {
+///|
+pub fn Memory::writeFloat_unsafe(
+  self : Memory,
+  pos : Int,
+  value : Float
+) -> Unit {
   storef32(pos + self.offset, value)
 }
 
-pub fn writeInt64(self : Memory, pos : Int, value : Int64) -> Bool {
+///|
+pub fn Memory::writeInt64(self : Memory, pos : Int, value : Int64) -> Bool {
   if pos + 8 < self.length {
     store64(pos + self.offset, value)
     true
@@ -223,11 +267,17 @@ pub fn writeInt64(self : Memory, pos : Int, value : Int64) -> Bool {
   }
 }
 
-pub fn writeInt64_unsafe(self : Memory, pos : Int, value : Int64) -> Unit {
+///|
+pub fn Memory::writeInt64_unsafe(
+  self : Memory,
+  pos : Int,
+  value : Int64
+) -> Unit {
   store64(pos + self.offset, value)
 }
 
-pub fn writeDouble(self : Memory, pos : Int, value : Double) -> Bool {
+///|
+pub fn Memory::writeDouble(self : Memory, pos : Int, value : Double) -> Bool {
   if pos + 8 < self.length {
     storef64(pos + self.offset, value)
     true
@@ -236,11 +286,17 @@ pub fn writeDouble(self : Memory, pos : Int, value : Double) -> Bool {
   }
 }
 
-pub fn writeDouble_unsafe(self : Memory, pos : Int, value : Double) -> Unit {
+///|
+pub fn Memory::writeDouble_unsafe(
+  self : Memory,
+  pos : Int,
+  value : Double
+) -> Unit {
   storef64(pos + self.offset, value)
 }
 
-pub fn writeU16(self : Memory, pos : Int, value : Int) -> Bool {
+///|
+pub fn Memory::writeU16(self : Memory, pos : Int, value : Int) -> Bool {
   if pos + 2 < self.length {
     store16(pos + self.offset, value)
     true
@@ -249,11 +305,13 @@ pub fn writeU16(self : Memory, pos : Int, value : Int) -> Bool {
   }
 }
 
-pub fn writeU16_unsafe(self : Memory, pos : Int, value : Int) -> Unit {
+///|
+pub fn Memory::writeU16_unsafe(self : Memory, pos : Int, value : Int) -> Unit {
   store16(pos + self.offset, value)
 }
 
-pub fn writeByte(self : Memory, pos : Int, value : Int) -> Bool {
+///|
+pub fn Memory::writeByte(self : Memory, pos : Int, value : Int) -> Bool {
   if pos + 1 < self.length {
     store8(pos + self.offset, value)
     true
@@ -262,11 +320,13 @@ pub fn writeByte(self : Memory, pos : Int, value : Int) -> Bool {
   }
 }
 
-pub fn writeByte_unsafe(self : Memory, pos : Int, value : Int) -> Unit {
+///|
+pub fn Memory::writeByte_unsafe(self : Memory, pos : Int, value : Int) -> Unit {
   store8(pos + self.offset, value)
 }
 
-pub fn writeString(self : Memory, pos : Int, value : String) -> Unit {
+///|
+pub fn Memory::writeString(self : Memory, pos : Int, value : String) -> Unit {
   let mut canwrite = self.length - pos
   let mut start = self.offset + pos
   for char in value {
@@ -280,7 +340,8 @@ pub fn writeString(self : Memory, pos : Int, value : String) -> Unit {
   }
 }
 
-pub fn readString(self : Memory, pos : Int, strLen : Int) -> String {
+///|
+pub fn Memory::readString(self : Memory, pos : Int, strLen : Int) -> String {
   let mut canread = self.length - pos
   let strLen = strLen << 1
   if canread > strLen {
@@ -296,6 +357,7 @@ pub fn readString(self : Memory, pos : Int, strLen : Int) -> String {
   String::from_array(arr)
 }
 
+///|
 priv struct MemoryManager {
   usedOffset : Set[Int]
   unUsedChunk : @sorted_map.T[Int, Array[Int]] //length->Array[offset]
@@ -303,6 +365,7 @@ priv struct MemoryManager {
   mut tailMem : Memory
 } derive(Show)
 
+///|
 fn removeUnUsedChunk(
   self : MemoryManager,
   chunkSize : Int,
@@ -334,6 +397,7 @@ fn removeUnUsedChunk(
   }
 }
 
+///|
 fn freeMergeNextChunk(self : MemoryManager, mem : Memory) -> Unit {
   for offset, size in memManager.unUsedOffset {
     if offset > mem.offset {
@@ -358,6 +422,7 @@ fn freeMergeNextChunk(self : MemoryManager, mem : Memory) -> Unit {
   }
 }
 
+///|
 let memManager : MemoryManager = {
   usedOffset: Set::new(),
   unUsedChunk: @sorted_map.new(),
@@ -365,6 +430,7 @@ let memManager : MemoryManager = {
   tailMem: { offset: 0, length: 0 },
 }
 
+///|
 pub fn getMemory(size : Int) -> Memory {
   let mut endUnUsedMemory : Memory = { offset: -1, length: 0 }
   for chunkLen, chunkOffsetArray in memManager.unUsedChunk {
@@ -430,10 +496,9 @@ pub fn getMemory(size : Int) -> Memory {
       offset: endOffset,
       length: size - endUnUsedMemory.length,
     }
-    memManager.removeUnUsedChunk(
-      endUnUsedMemory.length,
-      [endUnUsedMemory.offset],
-    )
+    memManager.removeUnUsedChunk(endUnUsedMemory.length, [
+      endUnUsedMemory.offset,
+    ])
     memManager.unUsedOffset.remove(endUnUsedMemory.offset)
     memManager.usedOffset.add(endUnUsedMemory.offset)
     { offset: endUnUsedMemory.offset, length: size }
@@ -444,6 +509,7 @@ pub fn getMemory(size : Int) -> Memory {
   }
 }
 
+///|
 pub fn freeMemory(mem : Memory) -> Unit {
   if memManager.usedOffset.remove_and_check(mem.offset) {
     //然后回收到未使用中去        
@@ -459,10 +525,9 @@ pub fn freeMemory(mem : Memory) -> Unit {
             if lastunUsed.length == size {
               memManager.removeUnUsedChunk(size, [lastunUsed.offset, offset])
             } else {
-              memManager.removeUnUsedChunk(
-                lastunUsed.length,
-                [lastunUsed.offset],
-              )
+              memManager.removeUnUsedChunk(lastunUsed.length, [
+                lastunUsed.offset,
+              ])
               memManager.removeUnUsedChunk(size, [offset])
             }
             lastunUsed.length + mem.length + size
@@ -520,6 +585,7 @@ pub fn freeMemory(mem : Memory) -> Unit {
   }
 }
 
+///|
 pub fn realloc(mem : Memory, newSize : Int) -> Memory {
   if newSize <= mem.length {
     return mem
@@ -574,10 +640,9 @@ pub fn realloc(mem : Memory, newSize : Int) -> Memory {
             if lastunUsed.length == size {
               memManager.removeUnUsedChunk(size, [lastunUsed.offset, offset])
             } else {
-              memManager.removeUnUsedChunk(
-                lastunUsed.length,
-                [lastunUsed.offset],
-              )
+              memManager.removeUnUsedChunk(lastunUsed.length, [
+                lastunUsed.offset,
+              ])
               memManager.removeUnUsedChunk(size, [offset])
             }
             memManager.unUsedOffset.remove(lastunUsed.offset)
@@ -628,6 +693,7 @@ pub fn realloc(mem : Memory, newSize : Int) -> Memory {
   result
 }
 
+///|
 test "mem" {
   let mem1 = getMemory(48)
   let mem2 = getMemory(12)

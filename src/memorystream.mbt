@@ -1,3 +1,4 @@
+///|
 struct MemoryStream {
   mut capacity : Int
   mut size : Int
@@ -6,6 +7,7 @@ struct MemoryStream {
   mut currentChunk : Int
 }
 
+///|
 pub fn MemoryStream::new() -> MemoryStream {
   {
     size: 0,
@@ -16,7 +18,8 @@ pub fn MemoryStream::new() -> MemoryStream {
   }
 }
 
-pub fn free(self : MemoryStream) -> Unit {
+///|
+pub fn MemoryStream::free(self : MemoryStream) -> Unit {
   for mem in self.chunks {
     freeMemory(mem)
   }
@@ -26,13 +29,15 @@ pub fn free(self : MemoryStream) -> Unit {
   self.currentChunk = 0
 }
 
+///|
 pub(all) enum SeekOrigin {
   SoBeginning
   SoCurrent
   SoEnd
 }
 
-pub fn setSize(self : MemoryStream, size : Int) -> Unit {
+///|
+pub fn MemoryStream::setSize(self : MemoryStream, size : Int) -> Unit {
   if self.size < size {
     //扩容
     if self.capacity >= size {
@@ -84,9 +89,10 @@ pub fn setSize(self : MemoryStream, size : Int) -> Unit {
                 offset: mem.offset,
                 length: mem.length - deltaSize,
               }
-              memManager.freeMergeNextChunk(
-                { offset: newMem.offset + newMem.length, length: deltaSize },
-              )
+              memManager.freeMergeNextChunk({
+                offset: newMem.offset + newMem.length,
+                length: deltaSize,
+              })
               self.chunks.push(newMem)
               self.capacity = size
               self.size = size
@@ -111,11 +117,17 @@ pub fn setSize(self : MemoryStream, size : Int) -> Unit {
   }
 }
 
-pub fn setPosition(self : MemoryStream, pos : Int) -> Unit {
+///|
+pub fn MemoryStream::setPosition(self : MemoryStream, pos : Int) -> Unit {
   self.seek(pos, SoBeginning)
 }
 
-pub fn seek(self : MemoryStream, pos : Int, origin : SeekOrigin) -> Unit {
+///|
+pub fn MemoryStream::seek(
+  self : MemoryStream,
+  pos : Int,
+  origin : SeekOrigin
+) -> Unit {
   if pos == 0 {
     return
   }
@@ -215,7 +227,8 @@ pub fn seek(self : MemoryStream, pos : Int, origin : SeekOrigin) -> Unit {
   }
 }
 
-pub fn position(self : MemoryStream) -> Int {
+///|
+pub fn MemoryStream::position(self : MemoryStream) -> Int {
   let mut sum = self.dataPosition
   for i in 0..<self.currentChunk {
     sum += self.chunks[i].length
@@ -223,6 +236,7 @@ pub fn position(self : MemoryStream) -> Int {
   sum
 }
 
+///|
 test "memoryStream" {
   let stream = MemoryStream::new()
   stream.setSize(200)
